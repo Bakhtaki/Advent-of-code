@@ -7,7 +7,8 @@ Level9 part1.
 # import sys
 # import itertools
 # from collections import defaultdict, Counter
-import pprint as pp
+# import pprint as pp
+import datetime
 
 
 def get_data(filename):
@@ -23,14 +24,49 @@ def get_data(filename):
 
 def check_adjacency(point, row, column, matrix):
     """Evaluate neighbors  points of input."""
-    print(point, row, column, matrix)
+    # print(row, column)
     if (row, column) == (0, 0):
-        return (point < matrix[row + 1][column]) and (point < matrix[row][column + 1])
-    elif (row, column) == (len(matrix) - 1 , len(matrix[0]) - 1):
-        return (point < matrix[row][column-1]) and (point < matrix[row - 1][column -1])
+        # print("Top,Left")
+        return ((point < matrix[row + 1][column]) and
+                (point < matrix[row][column + 1]))
+    elif (row, column) == (len(matrix) - 1, len(matrix[0]) - 1):
+        # print("Buttom,Right")
+        return ((point < matrix[row][column-1]) and
+                (point < matrix[row - 1][column - 1]))
+    elif (row, column) == (0, len(matrix[0]) - 1):
+        # print("Top,Right")
+        return((point < matrix[row][column - 1] and
+                point < matrix[row + 1][column]))
+    elif (row, column) == (len(matrix) - 1, 0):
+        # print("Buttom,Left")
+        return((point < matrix[row][column + 1]) and
+               (point < matrix[row - 1][column]))
+    elif row == 0:
+        # print("First Line")
+        return((point < matrix[row][column - 1]) and
+               (point < matrix[row][column + 1]) and
+               point < matrix[row + 1][column])
+    elif row == len(matrix) - 1:
+        # print("last line")
+        return((point < matrix[row][column - 1]) and
+               (point < matrix[row][column + 1]) and
+               point < matrix[row - 1][column])
+    elif column == 0:
+        # print("First Column")
+        return((point < matrix[row][column + 1]) and
+               point < matrix[row + 1][column] and
+               point < matrix[row - 1][column])
+    elif column == len(matrix[0]) - 1:
+        # print("Last Column")
+        return((point < matrix[row][column - 1]) and
+               point < matrix[row + 1][column] and
+               point < matrix[row - 1][column])
     else:
-        return None
-
+        # print("Middle Of table")
+        return((point < matrix[row][column - 1]) and
+               (point < matrix[row][column + 1]) and
+               (point < matrix[row - 1][column]) and
+               (point < matrix[row + 1][column]))
 
 
 def check_point(matrix):
@@ -49,16 +85,20 @@ def check_point(matrix):
             point_value = matrix[row][column]
             result = check_adjacency(point_value, row, column, matrix)
             if result:
+                # print("Target Identified")
                 targets.append(point_value)
-    total = sum(targets)
+    total = sum(targets) + len(targets)
     return total
 
 
 def main():
     """Logical flow of the script."""
-    data = get_data('level9.txt')
-    pp.pprint(data)
+    start_time = datetime.datetime.now()
+    data = get_data('advent_of_code_l9.txt')
+    # pp.pprint(data)
     total = check_point(data)
+    end_time = datetime.datetime.now()
+    print("Total Execution Time: {}".format(end_time - start_time))
     print(f"Total is : {total}")
 
 
