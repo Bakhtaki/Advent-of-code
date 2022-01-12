@@ -14,7 +14,7 @@ def get_data(filename):
 
 
 def five_char_decoder(word):
-    """Detect 5 charcter  string in between 2,3,5."""
+    """Detect 5 character  string in between 2,3,5."""
     if ''.join(sorted(word)) == 'abcdf':
         decode = "3"
     if ''.join(sorted(word)) == 'acdfg':
@@ -26,7 +26,7 @@ def five_char_decoder(word):
 
 
 def six_char_decoder(word):
-    """Detect 6 charchter string between 0,6,9."""
+    """Detect 6 character string between 0,6,9."""
     if ''.join(sorted(word)) == 'abcdeg':
         decode = '0'
     if ''.join(sorted(word)) == 'bcdefg':
@@ -61,7 +61,7 @@ def section_decoder(word):
 
 
 def decode_output(digits):
-    """Determine 2,3,4,8 lemght digits."""
+    """Determine 2,3,4,8 length digits."""
     total = 0
     for line in digits:
         this_line_output = ""
@@ -75,7 +75,7 @@ def decode_output(digits):
 
 
 def main():
-    """Structre of script."""
+    """Structure of script."""
     digits = get_data("advent_of_code_l8.txt")
     total = decode_output(digits)
     print(total)

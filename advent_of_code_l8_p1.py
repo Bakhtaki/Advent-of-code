@@ -14,7 +14,7 @@ def get_data(filename):
 
 
 def detect_digits(digits):
-    """Determine 2,3,4,8 lemght digits."""
+    """Determine 2,3,4,8 length digits."""
     count = 0
     for line in digits:
         line = line.split()
@@ -25,7 +25,7 @@ def detect_digits(digits):
 
 
 def main():
-    """Structre of scrit."""
+    """Structure of script."""
     digits = get_data("advent_of_code_l8.txt")
     detect_digits(digits)
 
