@@ -1,8 +1,7 @@
-# pylint: disable=too-many-return-statements
 """
 This Script, is solution for advent of code 2021.
 
-Level9 part1.
+Level9 part2.
 """
 
 # import sys
@@ -10,6 +9,7 @@ Level9 part1.
 # from collections import defaultdict, Counter
 # import pprint as pp
 import datetime
+import numpy as np
 
 
 def get_data(filename):
@@ -20,6 +20,7 @@ def get_data(filename):
             line = [int(x) for x in line]
             lines.append(list(line))
     file.close()
+    lines = np.array([np.array(line) for line in lines])
     return lines
 
 
@@ -82,6 +83,7 @@ def check_point(matrix):
     len_rows = len(matrix)
     len_cols = len(matrix[0])
     targets = []
+    coordinates = []
     for row in range(len_rows):
         for column in range(len_cols):
             result = False
@@ -90,19 +92,32 @@ def check_point(matrix):
             if result:
                 # print("Target Identified")
                 targets.append(point_value)
-    total = sum(targets) + len(targets)
-    return total
+                coordinates.append((row, column))
+    basin_count = len(targets)
+    return basin_count , coordinates
+
+
+def find_basins(data):
+    """Check the Matrix for find 3 most biggest basins.
+
+    Args:
+        data ([numpy array ]): [Array of coordinates to find.]
+    """
+    checked = np.zeros(shape=(len(data),len(data[0])))
+    print(checked)
 
 
 def main():
     """Logical flow of the script."""
     start_time = datetime.datetime.now()
-    data = get_data('advent_of_code_l9.txt')
-    # pp.pprint(data)
-    total = check_point(data)
+    data = get_data('level9.txt')
+    # print(data)
+    basin_count , coordinates = check_point(data)
+    print(f'There are {basin_count} basins , cooridnates of basins are : {coordinates}')
+    find_basins(data)
     end_time = datetime.datetime.now()
     print(f"Total Execution Time: {end_time - start_time}")
-    print(f"Total is : {total}")
+
 
 
 if __name__ == '__main__':
