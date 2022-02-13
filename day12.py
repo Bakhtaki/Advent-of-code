@@ -6,7 +6,6 @@ day 12 part 1,2.
 """
 
 import collections
-import pprint as pp
 
 
 def get_data(filename):
@@ -25,16 +24,60 @@ def part1(data: list) -> int:
         src, dst = line.split('-')
         edges[src].add(dst)
         edges[dst].add(src)
-    pp.pprint(edges)
 
     all_path = set()
     todo = [('start',)]
 
+    while todo:
+        path = todo.pop()
+
+        if path[-1] == 'end':
+            all_path.add(path)
+            continue
+
+        for node in edges[path[-1]]:
+            if not node.islower() or node not in path:
+                todo.append(path + (node,))
+
+    print('Part 1 answer is equal to : ', len(all_path))
+
+
+def part2(data: list) -> int:
+    """Provide Solution for part 2 of day 12."""
+    edges = collections.defaultdict(set)
+
+    for line in data:
+        src, dest = line.split('-')
+        edges[src].add(dest)
+        edges[dest].add(src)
+
+    all_path = set()
+    todo = [(('start', ), False)]
+
+    while todo:
+        path, visited = todo.pop()
+
+        if path[-1] == 'end':
+            all_path.add(path)
+            continue
+
+        for node in edges[path[-1]]:
+            if node == 'start':
+                continue
+
+            if node.isupper() or node not in path:
+                todo.append(((path + (node,)), visited))
+            elif not visited and path.count(node) == 1:
+                todo.append(((path + (node,)), True))
+
+    print("Part 2 Answer is equal to : ", len(all_path))
+
 
 def main():
     """Control logic of Script."""
-    data = get_data('day12_test1.txt')
-    part1(data)
+
+    part1(get_data('day12.txt'))  # real
+    part2(get_data('day12.txt'))  # real
 
 
 if __name__ == "__main__":
