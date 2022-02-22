@@ -75,7 +75,7 @@ def main():
     # get data
     data = get_data("day16.txt")
 
-    # Print Data Lenght
+    # Print Data Length
     print(f'Data length is: {len(data)}')
 
     # sleep for 0.5 seconds
