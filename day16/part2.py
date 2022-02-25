@@ -40,17 +40,17 @@ def operation(type_id, values):
 
     # Lesser Value for type 6
     if type_id == 6:
-        result = -1 if values[0] < values[1] else 0
+        result = 1 if values[0] < values[1] else 0
 
     # Equal Value for type 7
     if type_id == 7:
-        result = -1 if values[0] == values[1] else 0
+        result = 1 if values[0] == values[1] else 0
 
     # return result
     return result
 
 
-def parse(data, index, j=1):
+def parse(data, i, j=1):
     """Parse Packet to get values.
 
     Args:
@@ -58,46 +58,84 @@ def parse(data, index, j=1):
         index (Int):  Start of packet
         j (int, optional): _description_. Defaults to 1.
     """
-    if index == j:
+    if i == j:
         return None, None
 
-    # Remove Useless bits
-    if index > len(data) - 4:
+    # Ending bits
+    if i + 4 > len(data):
         return None, None
 
-    # Get version
-    version = int(data[:3], base=2)
+    # Get Version
+    version = int(data[i:i+3], base=2)
 
-    # Get type
-    type_id = int(data[3:6], base=2)
+    # Get Type
+    type_id = int(data[i+3:i+6], base=2)
 
-    # literal values
+    # Literal Packet
     if type_id == 4:
-        index = 6
+        i += 6
+        num_str = ''
         end = False
-        literal_value = ''
         while not end:
-            if data[index] == '0':
+            if data[i] == '0':
                 end = True
-            literal_value += data[index+1:index+5]
-            index += 5
-        value = int(literal_value, base=2)
-        return value, index
+            num_str += data[i+1:i+5]
+            i += 5
+        value = int(num_str, base=2)
+        print({'Version': version,
+               'Type': type_id,
+               'Value': value,
+               'Index': i})
+        return value, i
 
-    # Operator Parameters
-    sub_packet = []
-    next_start = None
+    # Operator Packet
+    sub_packets = []
+    next_start = None  # Value to return
 
-    len_id = data[index+6]
+    # Detect type of packet
+    len_id = data[i+6]
 
-    # if Len ID is 0 next 15 bits are the length
+    # parse if len_id shows length of packet
     if len_id == '0':
-        num_bits = data[index+7:index+22]
-        print(int(num_bits, base=2))
+        # Next 15 bits represents how many bits are inside the packet
+        num_bits = int(data[i+7:i+22], base=2)
+
+        end = i + 22 + num_bits
+        index = i + 22
+        prev_index = None
+
+        while index != None:
+            prev_index = index
+            value, index = parse(data, index, j=end)
+            sub_packets.append(value)
+        sub_packets = sub_packets[:-1]  # Remove last None
+        next_start = prev_index
+        print({'Version': version,
+               'Type': type_id,
+               'Sub Packets': sub_packets,
+               'Index': i})
+
+    # parse if len_id shows number of packets
+    else:
+        # Next 11 bits represents how many packets are inside
+        rem_sub_packets = int(data[i+7:i+18], base=2)
+        index = i + 18
+        while rem_sub_packets > 0:
+            value, index = parse(data, index)
+            rem_sub_packets = -1
+            sub_packets.append(value)
+        next_start = index
+        print({'Version': version,
+               'Type': type_id,
+               'Sub Packets': sub_packets,
+               'Index': i})
+
+    # Proccess the Operations
+    return operation(type_id, sub_packets), next_start
 
 
 def main():
-    """Main Structure of script."""
+    """Structure of script."""
     # Save Start Time
     start_time = datetime.datetime.now()
 
@@ -110,6 +148,11 @@ def main():
 
     # Save End Time
     end_time = datetime.datetime.now()
+
+    answer = parse(data, 0)[0]
+
+    # Print Answer
+    print(f'Answer: {answer}')
 
     # Print Time
     print(f'Time Taken: {end_time - start_time}')
