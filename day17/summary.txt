@@ -12,4 +12,4 @@ y Velocity =- 1
 
 - What is the highest y position th`e probe reaches?
 -example = (6,9)
--exepcted output = 45
+-expected output = 45
