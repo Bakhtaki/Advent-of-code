@@ -82,10 +82,6 @@ def parse(data, i, j=1):
             num_str += data[i+1:i+5]
             i += 5
         value = int(num_str, base=2)
-        print({'Version': version,
-               'Type': type_id,
-               'Value': value,
-               'Index': i})
         return value, i
 
     # Operator Packet
@@ -110,10 +106,6 @@ def parse(data, i, j=1):
             sub_packets.append(value)
         sub_packets = sub_packets[:-1]  # Remove last None
         next_start = prev_index
-        print({'Version': version,
-               'Type': type_id,
-               'Sub Packets': sub_packets,
-               'Index': i})
 
     # parse if len_id shows number of packets
     else:
@@ -125,10 +117,6 @@ def parse(data, i, j=1):
             rem_sub_packets = -1
             sub_packets.append(value)
         next_start = index
-        print({'Version': version,
-               'Type': type_id,
-               'Sub Packets': sub_packets,
-               'Index': i})
 
     # Proccess the Operations
     return operation(type_id, sub_packets), next_start
@@ -146,13 +134,13 @@ def main():
     if len(data) % 4 != 0:
         data = data.zfill(len(data) + (4 - len(data) % 4))
 
-    # Save End Time
-    end_time = datetime.datetime.now()
-
     answer = parse(data, 0)[0]
 
     # Print Answer
     print(f'Answer: {answer}')
+
+    # Save End Time
+    end_time = datetime.datetime.now()
 
     # Print Time
     print(f'Time Taken: {end_time - start_time}')
