@@ -54,6 +54,43 @@ def iteritems(pos, vel):
     return new_pos, new_vel
 
 
+def passed_target_area(pos, vel, target_area):
+    """Check if Position Passed Target Area
+
+    Params:
+        pos (_type_): Position
+        vel (_type_): Velocity
+        target_area (_type_): Target Area
+
+    Returns:
+        _type_: True if passed target area, False if not
+    """
+    if pos[0] > target_area[0][1] and vel[0] > 0:
+        return True
+    if pos[0] < target_area[0][0] and vel[0] < 0:
+        return True
+    if pos[1] < target_area[1][0]:
+        return True
+
+    return False
+
+
+def is_within_target_area(pos, target_area):
+    """Check if position is within target area.
+
+    Params:
+        pos (_type_): Position
+        target_area (_type_): Target Area
+
+    Returns:
+        _type_: True if within target area, False if not
+    """
+    if target_area[0][0] <= pos[0] <= target_area[0][1] \
+       and target_area[1][0] <= pos[1] <= target_area[1][1]:
+        return True
+    return False
+
+
 # Main Function:
 def main():
     """Control flow of Script."""
@@ -61,22 +98,22 @@ def main():
     target_area = get_data("day17_test.txt")
     print(f'Target Area: {target_area}')
 
+    # Initialize Variables
     max_height = 0
+    pos = [0, 0]
+    vel = [9, 0]
+    # max_vel_y = abs(min(target_area[1]) + 1)
 
-    for xv in range(-100, 100):
-        for yv in range(abs(target_area[1][0])):
-            vel = (xv, yv)
-            pos = (0, 0)
-            flag = True
-            while flag:
+    # Iterate through all possible velocities
+    for _i in range(30):
+        if not passed_target_area(pos, vel, target_area):
+            if is_within_target_area(pos, target_area):
+                print(f'Position: {pos}')
+                break
+            else:
                 new_pos, new_vel = iteritems(pos, vel)
-                print(f'New Position: {new_pos}, New Velocity: {new_vel}')
-                max_height = max(max_height, new_pos[1])
-                if new_pos[1] + new_vel[1] < target_area[1][0]:
-                    flag = False
-                    break
-                pos = new_pos
-                vel = new_vel
+                max_height = max(max_height, pos[1])
+                pos, vel = new_pos, new_vel
 
     print(f'Max Height: {max_height}')
 
