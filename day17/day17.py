@@ -91,30 +91,47 @@ def is_within_target_area(pos, target_area):
     return False
 
 
+def meet_target_area(vel, target_area):
+    """_summary_
+
+        Args:
+        pos (_type_): _description_
+        target_area (_type_): _description_
+    """
+    max_height = 0
+    pos = [0, 0]
+
+    while not passed_target_area(pos, vel, target_area):
+        if is_within_target_area(pos, target_area):
+            return True, max_height
+        else:
+            new_pos, new_vel = iteritems(pos, vel)
+            max_height = max(max_height, pos[1])
+            pos, vel = new_pos, new_vel
+    return False, None
+
+
 # Main Function:
 def main():
     """Control flow of Script."""
     # Get Data Function
-    target_area = get_data("day17_test.txt")
+    target_area = get_data("day17.txt")
     print(f'Target Area: {target_area}')
 
-    # Initialize Variables
+    # Initialize Position and Velocity
+    max_vel_y = abs(min(target_area[1]))
+    yv = 0
     max_height = 0
-    pos = [0, 0]
-    vel = [9, 0]
-    # max_vel_y = abs(min(target_area[1]) + 1)
 
-    # Iterate through all possible velocities
-    for _i in range(30):
-        if not passed_target_area(pos, vel, target_area):
-            if is_within_target_area(pos, target_area):
-                print(f'Position: {pos}')
+    # Bruteforce velocity
+    while yv <= max_vel_y:
+        for vx in range(0, 275):
+            vel = [vx, yv]
+            meet, max_y = meet_target_area(vel, target_area)
+            if meet:
+                max_height = max(max_height, max_y)
                 break
-            else:
-                new_pos, new_vel = iteritems(pos, vel)
-                max_height = max(max_height, pos[1])
-                pos, vel = new_pos, new_vel
-
+        yv += 1
     print(f'Max Height: {max_height}')
 
 
@@ -127,3 +144,4 @@ if __name__ == '__main__':
     # End Timer
     end_time = datetime.datetime.now()
     print(f'Total Runtime: {end_time - start_time}')
+    print('-' * 40)
