@@ -69,7 +69,7 @@ def passed_target_area(pos, vel, target_area):
         return True
     if pos[0] < target_area[0][0] and vel[0] < 0:
         return True
-    if pos[1] < target_area[1][0]:
+    if pos[1] < target_area[1][0] and vel[1] < 0:
         return True
 
     return False
@@ -85,10 +85,8 @@ def is_within_target_area(pos, target_area):
     Returns:
         _type_: True if within target area, False if not
     """
-    if target_area[0][0] <= pos[0] <= target_area[0][1] \
-       and target_area[1][0] <= pos[1] <= target_area[1][1]:
-        return True
-    return False
+    return target_area[0][0] <= pos[0] <= target_area[0][1]\
+        and target_area[1][0] <= pos[1] <= target_area[1][1]
 
 
 def meet_target_area(vel, target_area):
@@ -98,43 +96,38 @@ def meet_target_area(vel, target_area):
         pos (_type_): _description_
         target_area (_type_): _description_
     """
-    max_height = 0
     pos = [0, 0]
 
     while not passed_target_area(pos, vel, target_area):
         if is_within_target_area(pos, target_area):
-            return True, max_height
+            return True
         else:
             new_pos, new_vel = iteritems(pos, vel)
-            max_height = max(max_height, pos[1])
             pos, vel = new_pos, new_vel
-    return False, None
+    return False
 
 
 # Main Function:
 def main():
     """Control flow of Script."""
     # Get Data Function
-    target_area = get_data("day17_test.txt")
+    target_area = get_data("day17.txt")
     print(f'Target Area: {target_area}')
 
     # Initialize Position and Velocity
     max_vel_y = abs(min(target_area[1]))
-    yv = 0
-    max_height = 0
+    yv = max_vel_y
+    count = 0
 
     # Bruteforce velocity
-    while yv <= max_vel_y:
-        for vx in range(-100, 275):
-            vel = [vx, yv]
-            meet, max_y = meet_target_area(vel, target_area)
+    while yv >= target_area[1][0]:
+        for xv in range(-400, 400):
+            vel = [xv, yv]
+            meet = meet_target_area(vel, target_area)
             if meet:
-                max_height = max(max_height, max_y)
-                break
-        yv += 1
-
-    # part 1 Solution
-    print(f'Part1 : {max_height}')
+                count += 1
+        yv -= 1
+    print(f'Part 2: {count}')
 
 
 if __name__ == '__main__':

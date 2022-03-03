@@ -1,0 +1,19 @@
+each Number is a pair
+
+a + b = [a, b]
+ex: [1, 2] + [3, 4] = [[1,2], [3,4]]
+
+- If any pair is nested inside four pairs, the leftmost such pair explodes.
+- If any regular number is 10 or greater, the leftmost such regular number splits.
+
+Explode:
+left  element of pair add to left previous pair and right element of  pair add to right previous pair ,current pair replace with 0.
+
+
+Split:
+floor(left element of pair /2) add to left previous pair and ceil(right element of pair /2) add to left next  pair ,current pair replace with 0.
+
+
+priority with explode then split
+
+
