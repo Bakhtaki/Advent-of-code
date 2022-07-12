@@ -24,9 +24,9 @@ class Test(unittest.TestCase):
 
     def test_add_pairs(self):
         """Test add_pairs function."""
-        pair1 = ['..', '^^.']
-        pair2 = ['..', '^^.']
-        expected = ['..^^', '..^^']
+        pair1 = [1,2]
+        pair2 = [[3,4],5]
+        expected = [[1,2], [[3,4],5]]
         self.assertEqual(add_pairs(pair1, pair2), expected)
 
     def test_magnitude(self):

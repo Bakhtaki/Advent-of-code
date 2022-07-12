@@ -16,34 +16,70 @@ def get_data(filename):
     return data
 
 
-# Explode the data
-def explode(data):
-    """Explode the data."""
-    pass
+# Define Node Class
+class Node:
+    """Node class."""
+
+    def __init__(self, value=None):
+        """Initialize node."""
+        self.value = value
+        self.left = None
+        self.right = None
+        self.parent = None
+
+    def __str__(self):
+        """Return string representation of node."""
+        return f'[{str(self.left), str(self.right)}]'
 
 
-# Split the elements if bigger than 10
-def split_data(data):
-    """Split data."""
-    pass
+# Define Parse function
+def parse(data):
+    """Parse data."""
+    root = Node()
+    if isinstance(data, int):
+        root.value = data
+        return root
+
+    root.left = parse(data[0])
+    root.right = parse(data[1])
+    root.left.parent = root
+    root.right.parent = root
+
+    reduce_tree(root)
+    return root
 
 
-# Add pairs
-def add_pairs(pair1, pair2):
-    """Add pairs."""
-    pass
+# Define reduce_tree function
+def reduce_tree(root):
+    """Reduce Tree function."""
 
 
-# Calculate the magnitudes recursively
-def magnitude(pairs):
-    """Magnitude."""
-    pass
+
+# Define Add Snailfish
+def add_pair(pair1, pair2):
+    """Add pair of numbers."""
+    root = Node()
+    root.left = pair1
+    root.right = pair2
+    root.left.parent = root
+    root.right.parent = root
+    reduce_tree(root)
+    return root
+
+
+# Define Magnitude function
+def magnitude(root):
+    """Return magnitude of data."""
+    if isinstance(root, int):
+        return root
+
+    return 3 * magnitude(root.left) + 2 * magnitude(root.right)
 
 
 # Main function
 def main():
-    """Main function."""
-    data = get_data('day18.txt')
+    """Flow of the script."""
+    data = get_data('day18_test.txt')
     print(f'data: {data}')
 
 
