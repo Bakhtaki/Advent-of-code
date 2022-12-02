@@ -1,11 +1,9 @@
-"""Advent of Code 2022 Day 1: Solution"""
-
-import sys
+"""Advent of Code 2022 Day 1: Solution."""
 
 
 # Define Function to read input file
 def read_input(filename):
-    """Read input file and return list of integers"""
+    """Read input file and return list of integers."""
     with open(filename, "r", encoding="utf-8") as file:
         data = file.read().splitlines()
     return data
@@ -30,7 +28,7 @@ def part1(data):
 
 # Define Main Function
 def main():
-    """Main Program"""
+    """Main Program."""
     # Read input file
     data = read_input("input1.txt")
 
@@ -47,7 +45,7 @@ def main():
     # Sum first 3 elements
     print("Part 2: {}".format(result[0] + result[1] + result[2]))
 
+
 # Run Program
 if __name__ == "__main__":
     main()
-
