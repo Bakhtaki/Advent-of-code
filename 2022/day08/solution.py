@@ -3,8 +3,9 @@
 import sys
 import numpy as np
 
+
 # Define Functions
-def visible_trees(grid ,x ,y):
+def visible_trees(grid, x, y):
     """Count visible_trees in the grid."""
     visible_trees = 0
 
@@ -12,7 +13,7 @@ def visible_trees(grid ,x ,y):
     for i in range(x):
         for j in range(y):
             value = grid[i, j]
-            if  j == 0 or np.amax(grid[i, :j]) < value:
+            if j == 0 or np.amax(grid[i, :j]) < value:
                 visible_trees += 1
             elif j == y - 1 or np.amax(grid[i, j + 1:]) < value:
                 visible_trees += 1
@@ -36,13 +37,13 @@ def view_score(grid, n, m):
             score = 1
             # Check all directions
             for di, dj in dd:
-                x, y = i , j
-                distance= 0
+                x, y = i, j
+                distance = 0
                 x += di
                 y += dj
 
                 while (0 <= x < n and 0 <= y < m) and grid[x, y] < value:
-                    distance +=1
+                    distance += 1
                     x += di
                     y += dj
 
