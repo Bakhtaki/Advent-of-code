@@ -1,5 +1,4 @@
 import sys
-import pprint as pp
 
 
 def get_file_content(file_name):
@@ -9,13 +8,47 @@ def get_file_content(file_name):
 
 
 def part1(data):
-    grid = data.split('\n')
-    pp.pprint(grid)
+
+    grid = data.strip().split('\n')
+
+    n = len(grid)
+    m = len(grid[0])
+
+    def is_symbol(i, j):
+        if not (0 <= i < n and 0 <= j < m):
+            return False
+        return grid[i][j] != '.' and not grid[i][j].isdigit()
+
+    answer = 0
 
     for r, row in enumerate(grid):
-        for c, col in enumerate(row):
-            if grid[r][c] == '6':
-                print(r, c)
+        start = 0
+
+        c = 0
+
+        while c < m:
+            start = c
+            num = ''
+            while c < m and row[c].isdigit():
+                num += row[c]
+                c += 1
+
+            if num == '':
+                c += 1
+                continue
+
+            num = int(num)
+
+            # Numbers are found, check for the symbol in adjacent cells
+            if is_symbol(r, start-1) or is_symbol(r, c):
+                answer += num
+                continue
+            # Check for the symbol in the row above and below digonal cells
+            for k in range(start-1, c+1):
+                if is_symbol(r-1, k) or is_symbol(r+1, k):
+                    answer += num
+                    break
+    print(f'Part 1: {answer}')
 
 
 def part2(data):
