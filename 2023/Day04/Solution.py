@@ -33,19 +33,20 @@ def part1(data):
 
 
 def part2(data):
-    line_counts = {}
     answer = 0
-    for ln, line in enumerate(data.splitlines()):
-        line = line.split(': ')[1]
-        win_card, card = line.split('|')
+    length = len(data.splitlines())
+    copies = [[] for _ in range(length+1)]
 
-        win_cards = []
-        for each in win_card.split():
+    for ln, line in enumerate(data.splitlines()):
+        win_cards, cards = [], []
+
+        refrence, hand = line.split('|')
+        refrence = refrence.split(': ')[1]
+        for each in refrence.split():
             if each != ' ':
                 win_cards.append(int(each))
 
-        cards = []
-        for each in card.split():
+        for each in hand.split():
             if each != ' ':
                 cards.append(int(each))
 
@@ -53,9 +54,16 @@ def part2(data):
         for number in win_cards:
             if number in cards:
                 common += 1
-        line_counts[ln+1] = common
 
-    print(line_counts)
+        for j in range(ln+1, ln+common+1):
+            copies[ln].append(j)
+
+    score = [0] + [1 for _ in range(length)]
+    for i in range(length-1, -1, -1):
+        for j in copies[i]:
+            score[i] += score[j]
+    answer = sum(score)
+    print(f"Part 2: {answer}")
 
 
 if __name__ == '__main__':
