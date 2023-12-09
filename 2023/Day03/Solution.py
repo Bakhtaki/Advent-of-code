@@ -43,7 +43,7 @@ def part1(data):
             if is_symbol(r, start-1) or is_symbol(r, c):
                 answer += num
                 continue
-            # Check for the symbol in the row above and below digonal cells
+            # Check for the symbol in the row above and below diagonal cells
             for k in range(start-1, c+1):
                 if is_symbol(r-1, k) or is_symbol(r+1, k):
                     answer += num
