@@ -52,7 +52,52 @@ def part1(data):
 
 
 def part2(data):
-    return data
+    grid = data.strip().split('\n')
+    n = len(grid)
+    m = len(grid[0])
+
+    selected = [[[] for _ in range(m)] for _ in range(n)]
+
+    def is_symbol(i, j, num):
+        if not (0 <= i < n and 0 <= j < m):
+            return False
+        if grid[i][j] == '*':
+            selected[i][j].append(num)
+
+        return grid[i][j] != '.' and not grid[i][j].isdigit()
+
+    answer = 0
+
+    for r, row in enumerate(grid):
+        start = 0
+
+        c = 0
+
+        while c < m:
+            start = c
+            num = ''
+            while c < m and row[c].isdigit():
+                num += row[c]
+                c += 1
+
+            if num == '':
+                c += 1
+                continue
+
+            num = int(num)
+
+            is_symbol(r, start-1, num) or is_symbol(r, c, num)
+
+            for k in range(start-1, c+1):
+                is_symbol(r-1, k, num) or is_symbol(r+1, k, num)
+
+    for i in range(n):
+        for j in range(m):
+            nums = selected[i][j]
+            if grid[i][j] == '*' and len(nums) == 2:
+                answer += nums[0] * nums[1]
+
+    print(f'Part 2: {answer}')
 
 
 if __name__ == '__main__':
