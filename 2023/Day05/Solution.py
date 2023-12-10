@@ -3,16 +3,94 @@ import sys
 
 def get_file_content(file_name):
     with open(file_name, 'r') as file:
-        file_content = file.read()
+        file_content = file.read().strip().split('\n')
     return file_content
 
 
 def part1(data):
-    print("Part 1")
+
+    def find_loc(seed):
+        cur_num = seed
+
+        for each in maps:
+            for destination, source, range_len in each:
+                if source <= cur_num <= source + range_len:
+                    cur_num = destination + (cur_num - source)
+                    break
+
+        return cur_num
+
+    seeds = list(map(int, data[0].split(' ')[1:]))
+    maps = []
+
+    i = 2
+
+    while i < len(data):
+        maps.append([])
+        i += 1
+        while i < len(data) and not data[i] == '':
+            destination, source, range_len = map(int, data[i].split())
+            maps[-1].append((destination, source, range_len))
+            i += 1
+
+        i += 1
+
+    locs = []
+
+    for seed in seeds:
+        loc = find_loc(seed)
+        locs.append(loc)
+
+    print(f'Part 1 anwser: {min(locs)}')
 
 
 def part2(data):
-    return data
+    def find_loc(seed):
+        cur_num = seed
+
+        for each in maps:
+            for destination, source, range_len in each:
+                if source <= cur_num <= source + range_len:
+                    cur_num = destination + (cur_num - source)
+                    break
+
+        return cur_num
+
+    seeds = list(map(int, data[0].split(' ')[1:]))
+
+    # Seperate each 2 vale in seed
+    seeds = [seeds[i:i + 2] for i in range(0, len(seeds), 2)]
+    temp = []
+
+    for each in seeds:
+        start = each[0]
+        end = each[1]
+        for i in range(start, start + end + 1):
+            temp.append(i)
+
+    seeds = temp
+
+    maps = []
+
+    i = 2
+
+    while i < len(data):
+        maps.append([])
+        i += 1
+        while i < len(data) and not data[i] == '':
+            destination, source, range_len = map(int, data[i].split())
+            maps[-1].append((destination, source, range_len))
+            i += 1
+
+        i += 1
+
+    locs = []
+
+    for seed in seeds:
+        loc = find_loc(seed)
+        locs.append(loc)
+
+    print(f'Part 2 anwser: {min(locs)}')
 
 
 if __name__ == '__main__':
