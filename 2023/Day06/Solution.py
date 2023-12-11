@@ -36,7 +36,25 @@ def part1(data):
 
 
 def part2(data):
-    return data
+    def cont_possible(t, d):
+        possible = 0
+        for i in range(t):
+            if (t - i) * i > d:
+                possible += 1
+        return possible
+
+    times = re.findall(r'\d+', data.split('\n')[0])
+    times = [int(i) for i in times]
+
+    distance = re.findall(r'\d+', data.split('\n')[1])
+    distance = [int(i) for i in distance]
+
+    time = int(''.join([str(i) for i in times]))
+    dist = int(''.join([str(i) for i in distance]))
+
+    answer = cont_possible(time, dist)
+
+    print(f"Part 2: {answer}")
 
 
 if __name__ == '__main__':
