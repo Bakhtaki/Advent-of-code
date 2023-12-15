@@ -1,4 +1,6 @@
 import sys
+from collections import defaultdict
+import re
 
 
 def get_file_content(file_name):
@@ -8,7 +10,29 @@ def get_file_content(file_name):
 
 
 def part1(data):
-    print("Part 1")
+
+    lines = data.splitlines()
+    steps = lines[0]
+
+    children = defaultdict(str)
+
+    for line in lines[2:]:
+        par, left, right = re.search(
+            r"(...) = \((...), (...)\)", line).groups(0)
+        children[par] = (left, right)
+
+    current = 'AAA'
+    count = 0
+
+    while current != 'ZZZ':
+        step = steps[count % len(steps)]
+        if step == 'L':
+            current = children[current][0]
+        else:
+            current = children[current][1]
+        count += 1
+
+    print(f"Part 1 answer: {count}")
 
 
 def part2(data):
