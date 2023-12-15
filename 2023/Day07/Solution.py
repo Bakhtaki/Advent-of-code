@@ -9,6 +9,13 @@ letter_map = {'T': 'A',
               'A': 'E'
               }
 
+letter_map2 = {'T': 'A',
+               'J': '.',
+               'Q': 'C',
+               'K': 'D',
+               'A': 'E',
+               }
+
 
 def get_file_content(file_name):
     with open(file_name, 'r') as file:
@@ -59,7 +66,59 @@ def part1(data):
 
 
 def part2(data):
-    return data
+
+    def hand_category(hand):
+        count = defaultdict(int)
+        for card in hand:
+            count[card] += 1
+
+        amounts = sorted(count.values(), reverse=True)
+
+        if amounts == [5]:
+            return 6
+        if amounts == [4, 1]:
+            return 5
+        if amounts == [3, 2]:
+            return 4
+        if amounts == [3, 1, 1]:
+            return 3
+        if amounts == [2, 2, 1]:
+            return 2
+        if amounts == [2, 1, 1, 1]:
+            return 1
+        if amounts == [1, 1, 1, 1, 1]:
+            return 0
+
+    def calsify_hand(hand):
+        return max(map(hand_category, replace(hand)))
+
+    def replace(hand):
+        if hand == '':
+            return ['']
+
+        return [
+            x + y
+            for x in ("23456789TQKA" if hand[0] == '' else hand[0])
+            for y in replace(hand[1:])
+        ]
+
+    def strength(hand):
+        return (hand_category(hand),
+                [letter_map2.get(card, card) for card in hand])
+
+    plays = []
+    for card in data.splitlines():
+        hand, bid = card.split(' ')
+        plays.append((strength(hand), int(bid)))
+
+    plays.sort(key=lambda play: play[0])
+
+    answer = 0
+
+    for rank, (hand, bid) in enumerate(plays, 1):
+        answer += rank * bid
+
+    print(f"Part 2: {answer}")
 
 
 if __name__ == '__main__':
