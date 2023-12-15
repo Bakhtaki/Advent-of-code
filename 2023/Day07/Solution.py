@@ -67,7 +67,7 @@ def part1(data):
 
 def part2(data):
 
-    def hand_category(hand):
+    def score(hand):
         count = defaultdict(int)
         for card in hand:
             count[card] += 1
@@ -89,29 +89,29 @@ def part2(data):
         if amounts == [1, 1, 1, 1, 1]:
             return 0
 
-    def calsify_hand(hand):
-        return max(map(hand_category, replace(hand)))
-
-    def replace(hand):
+    def replacement(hand):
         if hand == '':
             return ['']
 
         return [
             x + y
-            for x in ("23456789TQKA" if hand[0] == '' else hand[0])
-            for y in replace(hand[1:])
+            for x in ('23456789TQKA' if hand[0] == 'J' else hand[0])
+            for y in replacement(hand[1:])
         ]
 
+    def permutation(hand):
+        return max(map(score, replacement(hand)))
+
     def strength(hand):
-        return (hand_category(hand),
+        return (permutation(hand),
                 [letter_map2.get(card, card) for card in hand])
 
     plays = []
     for card in data.splitlines():
-        hand, bid = card.split(' ')
-        plays.append((strength(hand), int(bid)))
+        hand, bid = card.split()
+        plays.append((hand, int(bid)))
 
-    plays.sort(key=lambda play: play[0])
+    plays.sort(key=lambda play: strength(play[0]))
 
     answer = 0
 
