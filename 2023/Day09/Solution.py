@@ -16,42 +16,46 @@ def get_file_content(file_name):
     return file_content
 
 
+def diff(line):
+    """
+    Calculates the difference between each consecutive element in the
+    given list.
+
+    Args:
+        line (List[int]): A list of integers.
+
+    Returns:
+        List[int]: A list containing the difference between each
+            consecutive element in the input list.
+    """
+    return [line[i + 1] - line[i] for i in range(len(line) - 1)]
+
+
+def extrapolate(hist):
+    """
+    Extrapolates a histogram by extending its values until reaching a
+    final value of 0.
+
+    Parameters:
+        hist (List[int]): A list of integer values representing the
+        histogram.
+
+    Returns:
+        int: The extrapolated value of the histogram.
+    """
+    layers = [hist]
+
+    while not all([x == 0 for x in layers[-1]]):
+        layers.append(diff(layers[-1]))
+
+    layers[-1].append(0)
+    for i in range(len(layers) - 2, -1, -1):
+        layers[i].append(layers[i + 1][-1] + layers[i][-1])
+
+    return layers[0][-1]
+
+
 def part1(data):
-    def diff(line):
-        """
-        Calculates the difference between each consecutive element in the
-        given list.
-
-        Args:
-            line (List[int]): A list of integers.
-
-        Returns:
-            List[int]: A list containing the difference between each
-              consecutive element in the input list.
-        """
-        return [line[i + 1] - line[i] for i in range(len(line) - 1)]
-
-    def extrapolate(hist):
-        """
-        Extrapolates a histogram by extending its values until reaching a final value of 0.
-
-        Parameters:
-            hist (List[int]): A list of integer values representing the histogram.
-
-        Returns:
-            int: The extrapolated value of the histogram.
-        """
-        layers = [hist]
-
-        while not all([x == 0 for x in layers[-1]]):
-            layers.append(diff(layers[-1]))
-
-        layers[-1].append(0)
-        for i in range(len(layers) - 2, -1, -1):
-            layers[i].append(layers[i + 1][-1] + layers[i][-1])
-
-        return layers[0][-1]
-
     answers = []
     for line in data.splitlines():
         line = list(map(int, line.split()))
@@ -61,7 +65,12 @@ def part1(data):
 
 
 def part2(data):
-    return data
+    answer = []
+    for line in data.splitlines():
+        line = list(map(int, line.split()[::-1]))
+        answer.append(extrapolate(line))
+
+    print("Part 2:", sum(answer))
 
 
 if __name__ == "__main__":
