@@ -19,10 +19,10 @@ def get_file_content(file_name):
 
 
 def part2(data):
-    return data
+    part1(data, part2=True)
 
 
-def calculate_distance(p1, p2, ex=None, ey=None):
+def calculate_distance(p1, p2, ex=None, ey=None, part2=False):
     """
     Calculate the Manhattan distance between two points in a grid.
 
@@ -39,6 +39,7 @@ def calculate_distance(p1, p2, ex=None, ey=None):
     x2, y2 = p2
     empty_rows = ex
     empty_cols = ey
+    pp = part2
 
     x1, x2 = min(x1, x2), max(x1, x2)
     y1, y2 = min(y1, y2), max(y1, y2)
@@ -47,15 +48,21 @@ def calculate_distance(p1, p2, ex=None, ey=None):
     for i in range(x1, x2):
         distance += 1
         if i in empty_rows:
-            distance += 1
+            if pp:
+                distance += 10**6 - 1
+            else:
+                distance += 1
     for j in range(y1, y2):
         distance += 1
         if j in empty_cols:
-            distance += 1
+            if pp:
+                distance += 10**6 - 1
+            else:
+                distance += 1
     return distance
 
 
-def part1(data):
+def part1(data, part2=False):
     lines = data.splitlines()
     n, m = len(lines), len(lines[0])
 
@@ -90,7 +97,7 @@ def part1(data):
     for each in all_pairs:
         p1 = each[0]
         p2 = each[1]
-        distance = calculate_distance(p1, p2, empty_rows, empty_cols)
+        distance = calculate_distance(p1, p2, empty_rows, empty_cols, part2)
         sum += distance
     print(f'Part 1: {sum}')
 
