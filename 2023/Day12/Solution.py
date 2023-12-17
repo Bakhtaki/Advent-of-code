@@ -17,12 +17,73 @@ def get_file_content(file_name):
     return file_content
 
 
+def count_possibilities(stat, nums):
+    if stat == "":
+        return 1 if nums == () else 0
+
+    if nums == ():
+        return 0 if '#' in stat else 1
+
+    result = 0
+    if stat[0] in '.?':
+        result += count_possibilities(stat[1:], nums)
+
+    if stat[0] in '#?':
+        if (nums[0] <= len(stat) and "." not in stat[:nums[0]] and
+                (nums[0] == len(stat) or stat[nums[0]] != '#')):
+            result += count_possibilities(stat[nums[0]+1:], nums[1:])
+
+    return result
+
+
 def part1(data):
-    print("Part 1")
+    answer = 0
+    for line in data.splitlines():
+        stat, nums = line.split()
+        nums = tuple(map(int, nums.split(',')))
+        answer += count_possibilities(stat, nums)
+
+    print("Part 1 answer: ", answer)
+
+
+cache = {}
+
+
+def count_possibilities_unfolded(stat, nums):
+    if stat == "":
+        return 1 if nums == () else 0
+
+    if nums == ():
+        return 0 if '#' in stat else 1
+
+    key = (stat, nums)
+    if key in cache:
+        return cache[key]
+
+    result = 0
+
+    if stat[0] in '.?':
+        result += count_possibilities_unfolded(stat[1:], nums)
+
+    if stat[0] in '#?':
+        if (nums[0] <= len(stat) and "." not in stat[:nums[0]] and
+                (nums[0] == len(stat) or stat[nums[0]] != '#')):
+            result += count_possibilities_unfolded(stat[nums[0]+1:], nums[1:])
+
+    cache[key] = result
+    return result
 
 
 def part2(data):
-    return data
+    answer = 0
+    for line in data.splitlines():
+        stat, nums = line.split()
+        nums = tuple(map(int, nums.split(',')))
+
+        stat = "?".join([stat] * 5)
+        nums *= 5
+        answer += count_possibilities(stat, nums)
+    print("Part 2 answer: ", answer)
 
 
 if __name__ == '__main__':
