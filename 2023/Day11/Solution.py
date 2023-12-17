@@ -31,7 +31,7 @@ def calculate_distance(p1, p2, ex=None, ey=None, part2=False):
         p2 (tuple): The coordinates of the second point (x2, y2).
         ex (list, optional): List of empty rows. Defaults to None.
         ey (list, optional): List of empty columns. Defaults to None.
-
+        part2 (bool, optional): Whether to solve part 2. Defaults to False.
     Returns:
         int: The Manhattan distance between the two points.
     """
